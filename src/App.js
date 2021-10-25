@@ -9,6 +9,8 @@ import Header from './components/header/header.component'
 import { auth } from './firebase/firebase.utils'
 
 class App extends React.Component {
+  unsubscribeFromAuth = null
+
   constructor() {
     super()
 
@@ -18,10 +20,13 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    auth.onAuthStateChanged(user => {
-      console.log('user -', user)
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
       this.setState({ currentUser: user })
     })
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromAuth()
   }
 
   render() {
